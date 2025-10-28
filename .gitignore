@@ -1,0 +1,11 @@
+# Dir
+
+Code/
+procps/
+dconf/
+gtk-3.0/
+pulse/
+systemd/
+
+# File
+*.ini

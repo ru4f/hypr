@@ -1,0 +1,170 @@
+;; ** Status **
+
+(defpoll wifi-img :interval "10s" "bash ~/.config/eww/scripts/wifi.sh | head -n1")
+(defpoll wifi-name :interval "10s" "bash ~/.config/eww/scripts/wifi.sh | tail -n1")
+
+(defpoll user-img :interval "10s" "bash ~/.config/eww/scripts/username.sh | head -n1")
+(defpoll user-name :interval "10s" "bash ~/.config/eww/scripts/username.sh | tail -n1")
+
+(defpoll volume-img :interval "0.1s" "bash ~/.config/eww/scripts/volume.sh | head -n1")
+(defpoll volume :interval "0.1s" "bash ~/.config/eww/scripts/volume.sh | tail -n1")
+
+(defpoll battery-img :interval "10s" "bash ~/.config/eww/scripts/battery.sh | sed -n '1p'")
+(defpoll battery :interval "10s" "bash ~/.config/eww/scripts/battery.sh | sed -n '2p'")
+(defpoll battery-status :interval "5s" "bash ~/.config/eww/scripts/battery.sh | sed -n '3p'")
+
+;; ** System **
+
+(defpoll cpu-img :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | head -n 1 | cut -d '|' -f 1") 
+(defpoll cpu :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | tail -n1 | cut -d'|' -f1 | tr -d ' '") 
+
+(defpoll ram-img :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | head -n 1 | cut -d '|' -f 2") 
+(defpoll ram :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | tail -n1 | cut -d'|' -f2 | tr -d ' '") 
+
+(defpoll disk-img :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | head -n 1 | cut -d '|' -f 3") 
+(defpoll disk :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | tail -n1 | cut -d'|' -f3 | tr -d ' '")
+
+
+;; ** Hardware-box **
+
+(defwidget hardware-box []
+ (box :orientation "h"
+   (box :orientation "v" :class "hardware-box" :valign "center" :spacing 8 :halign "center" :space-evenly false :vexpand false :hexpand false
+     (image :path cpu-img :image-width 50 :image-height 50)
+     (label :text cpu )
+   )
+   (box :orientation "v" :class "hardware-box" :valign "center" :spacing 8 :halign "center" :space-evenly false :vexpand false :hexpand false
+     (image :path ram-img :image-width 50 :image-height 50)
+     (label :text ram)
+   )
+   (box :orientation "v" :class "hardware-box" :valign "center" :spacing 8 :halign "center" :space-evenly false :vexpand false :hexpand false
+     (image :path disk-img :image-width 50 :image-height 50)
+     (label :text disk)
+   )
+ )
+)
+
+
+
+(defwidget battery-box []
+  (box :orientation "h"
+       :valign "center"
+       :spacing 8
+       :halign "center"
+       :space-evenly false
+       :vexpand false
+       :hexpand false
+       :class "battery-box"
+    (image :path battery-img
+           :image-width 25
+           :image-height 25
+           :class {battery-status == "Charging" ? 'battery charging' : 'battery'}
+           :preserve-aspect-ratio true)
+    (label :text battery :halign "start" :class "text-box")
+  )
+)
+
+(defwidget volume-box []
+  (box :orientation "h"
+       :valign "center"
+       :spacing 8
+       :halign "center"
+       :space-evenly false
+       :vexpand false
+       :hexpand false
+       :class "volume-box"
+    (image :path volume-img
+           :image-width 25
+           :image-height 25
+           :preserve-aspect-ratio true)
+    (label :text volume :halign "start" :class "text-box")
+  )
+)
+
+(defwidget wifi-box []
+  (box :orientation "h"
+       :valign "center"
+       :spacing 8
+       :halign "center"
+       :space-evenly false
+       :vexpand false
+       :hexpand false
+       :class "wifi-box"
+    (image :path wifi-img
+           :image-width 25
+           :image-height 25
+           :preserve-aspect-ratio true)
+    (label :text wifi-name :halign "start" :class "text-box")
+  )
+)
+
+(defwidget user-box []
+  (box :orientation "h"
+       :valign "center"
+       :spacing 8
+       :halign "center"
+       :space-evenly false
+       :vexpand false
+       :hexpand false
+       :class "user-box"
+    (box :class "user-img-box"
+         :style "background-image: url('${user-img}');")
+    (label :text user-name :halign "start" :class "text-box")
+  )
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+(defwidget status-bar []
+  (box :orientation "h"
+       :space-evenly false
+       :halign "end"
+       :valign "center"
+       :spacing 15
+       :class "status-box"
+    (battery-box)
+    (volume-box)
+    (wifi-box)
+    (user-box)
+  )
+)
+
+(defwidget system-bar []
+  (box :orientation "h"
+       :space-evenly false
+       :halign "end"
+       :valign "center"
+       :spacing 15
+       :class "system-box"
+    (hardware-box)
+  )
+)
+
+;; ** WINDOWS **
+
+(defwindow bar
+  :monitor 0
+  :geometry (geometry :x "0px"
+                      :y "0px"
+                      :width "100%"
+                      :height "50px"
+                      :anchor "top center")
+  :stacking "fg"
+  :exclusive true
+  :focusable false
+  (box :orientation "v" :space-evenly false :halign "end" :valign "center" :spacing 15
+   (status-bar)
+   (system-bar) 
+  )
+)
+
