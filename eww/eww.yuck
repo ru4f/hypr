@@ -13,39 +13,6 @@
 (defpoll battery :interval "10s" "bash ~/.config/eww/scripts/battery.sh | sed -n '2p'")
 (defpoll battery-status :interval "5s" "bash ~/.config/eww/scripts/battery.sh | sed -n '3p'")
 
-;; ** System **
-
-(defpoll cpu-img :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | head -n 1 | cut -d '|' -f 1") 
-(defpoll cpu :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | tail -n1 | cut -d'|' -f1 | tr -d ' '") 
-
-(defpoll ram-img :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | head -n 1 | cut -d '|' -f 2") 
-(defpoll ram :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | tail -n1 | cut -d'|' -f2 | tr -d ' '") 
-
-(defpoll disk-img :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | head -n 1 | cut -d '|' -f 3") 
-(defpoll disk :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | tail -n1 | cut -d'|' -f3 | tr -d ' '")
-
-
-;; ** Hardware-box **
-
-(defwidget hardware-box []
- (box :orientation "h"
-   (box :orientation "v" :class "hardware-box" :valign "center" :spacing 8 :halign "center" :space-evenly false :vexpand false :hexpand false
-     (image :path cpu-img :image-width 50 :image-height 50)
-     (label :text cpu )
-   )
-   (box :orientation "v" :class "hardware-box" :valign "center" :spacing 8 :halign "center" :space-evenly false :vexpand false :hexpand false
-     (image :path ram-img :image-width 50 :image-height 50)
-     (label :text ram)
-   )
-   (box :orientation "v" :class "hardware-box" :valign "center" :spacing 8 :halign "center" :space-evenly false :vexpand false :hexpand false
-     (image :path disk-img :image-width 50 :image-height 50)
-     (label :text disk)
-   )
- )
-)
-
-
-
 (defwidget battery-box []
   (box :orientation "h"
        :valign "center"
@@ -113,25 +80,13 @@
   )
 )
 
-
-
-
-
-
-
-
-
-
-
-
-
 (defwidget status-bar []
   (box :orientation "h"
        :space-evenly false
        :halign "end"
        :valign "center"
        :spacing 15
-       :class "status-box"
+       :class "box"
     (battery-box)
     (volume-box)
     (wifi-box)
@@ -139,17 +94,35 @@
   )
 )
 
-(defwidget system-bar []
-  (box :orientation "h"
-       :space-evenly false
-       :halign "end"
-       :valign "center"
-       :spacing 15
-       :class "system-box"
-    (hardware-box)
+;; ** Music **
+(defpoll song :interval "1s" "bash ~/.config/eww/scripts/music_info.sh | cut -d'|' -f1")
+(defpoll artist :interval "1s" "bash ~/.config/eww/scripts/music_info.sh | cut -d'|' -f2")
+(defpoll poster :interval "1s" "bash ~/.config/eww/scripts/music_info.sh | cut -d'|' -f3")
+(defpoll software :interval "1s" "bash ~/.config/eww/scripts/music_info.sh | cut -d'|' -f4")
+(defpoll img :interval "1s" "bash ~/.config/eww/scripts/music_info.sh | cut -d'|' -f5")
+(defpoll is_playing :interval "1s" "bash ~/.config/eww/scripts/music_control.sh status | tail -n1")
+
+
+(defwidget music-bar []
+  (box :class "box"
+    (box :orientation "h" :spacing 0 :valign "center" :halign "start" :space-evenly false :vexpand false :hexpand false
+     (box :class "album" :valign "center" :halign "center" :vexpand false :hexpand false :style "background-image: url('${poster}');")
+     (box :class "musicbox" :orientation "v" :spacing 0 :valign "center" :halign "start" :space-evenly "false" :vexpand "false" :hexpand "false"
+					(label :class "song" :halign "start" :wrap "false" :limit-width 20 :text song)
+					(label :class "artist" :halign "start" :wrap "false" :limit-width 20 :text artist))
+    )
+    (box :class "music-buttons" :orientation "h" :spacing 5 :valign "center" :halign "end" :space-evenly false :vexpand false :hexpand false
+      (button :style "background-image: url('/home/ru4f/.config/eww/icons/music/previous.png');" :class "trackbutton" :onclick "bash /home/ru4f/.config/eww/scripts/music_control.sh prev")
+      (button :class "playbutton" 
+              :onclick "bash /home/ru4f/.config/eww/scripts/music_control.sh play-pause" 
+              :style { is_playing == "Playing"
+                 ? "background-image: url('/home/ru4f/.config/eww/icons/music/pause-button.png');"
+                 : "background-image: url('/home/ru4f/.config/eww/icons/music/play-button.png');" }
+      )
+      (button :style "background-image: url('/home/ru4f/.config/eww/icons/music/next.png');" :class "trackbutton" :onclick "bash /home/ru4f/.config/eww/scripts/music_control.sh next")
+    )
   )
 )
-
 ;; ** WINDOWS **
 
 (defwindow bar
@@ -162,9 +135,9 @@
   :stacking "fg"
   :exclusive true
   :focusable false
-  (box :orientation "v" :space-evenly false :halign "end" :valign "center" :spacing 15
+  (box :orientation "h" :space-evenly false :halign "end" :valign "center" :spacing 15
+   (music-bar)
    (status-bar)
-   (system-bar) 
   )
 )
 

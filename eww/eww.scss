@@ -37,18 +37,53 @@ window {
  background-position: center;
 }
 
-.status-box {
+.box {
+  padding: 10px 10px;
   margin: 10px 10px 0 0;
-  padding: 10px 10px;          
   background: #f5eee6; 
   border: 2px solid #1e1e2e;
   border-radius: 10px;
 }
 
-.system-box {
-  margin: 0px 10px 0 0;
-  padding: 10px 10px;
-  background: #f5eee6;
-  border: 2px solid #1e1e2e;
-  border-radius: 10px;
+.playbutton {
+  background-repeat: no-repeat;
+  background-size: 26px;
+  min-height: 26px;
+  min-width: 26px;
+  margin: 0px;
+}
+
+.trackbutton {
+ background-repeat: no-repeat;
+ background-size: 18px;
+ min-height: 18px;
+ min-width: 18px;
+ margin: 3px 0 0 0;
+}
+
+.musicbox {
+	margin : 0px 0px 0px 5px;
+}
+
+.song {
+	font-size : 14px;
+	font-weight : bold;
+}
+
+.artist {
+	font-size : 12px;
+	font-weight : bold;
+}
+
+.album {
+        background-repeat: no-repeat;
+        background-position: center;
+	background-size: cover;
+	min-height: 40px;
+	min-width: 40px;
+	border-radius: 8px;
+}
+
+.music-buttons {
+	margin : 0px 0px 0px 50px;
 }
