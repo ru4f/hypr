@@ -6,8 +6,8 @@
 (defpoll user-img :interval "10s" "bash ~/.config/eww/scripts/username.sh | head -n1")
 (defpoll user-name :interval "10s" "bash ~/.config/eww/scripts/username.sh | tail -n1")
 
-(defpoll volume-img :interval "0.1s" "bash ~/.config/eww/scripts/volume.sh | head -n1")
-(defpoll volume :interval "0.1s" "bash ~/.config/eww/scripts/volume.sh | tail -n1")
+(defpoll volume-img :interval "0.5s" "bash ~/.config/eww/scripts/volume.sh | head -n1")
+(defpoll volume :interval "0.5s" "bash ~/.config/eww/scripts/volume.sh | tail -n1")
 
 (defpoll battery-img :interval "10s" "bash ~/.config/eww/scripts/battery.sh | sed -n '1p'")
 (defpoll battery :interval "10s" "bash ~/.config/eww/scripts/battery.sh | sed -n '2p'")
@@ -23,8 +23,8 @@
        :hexpand false
        :class "battery-box"
     (image :path battery-img
-           :image-width 25
-           :image-height 25
+           :image-width 30
+           :image-height 30
            :class {battery-status == "Charging" ? 'battery charging' : 'battery'}
            :preserve-aspect-ratio true)
     (label :text battery :halign "start" :class "text-box")
@@ -41,8 +41,8 @@
        :hexpand false
        :class "volume-box"
     (image :path volume-img
-           :image-width 25
-           :image-height 25
+           :image-width 30
+           :image-height 30
            :preserve-aspect-ratio true)
     (label :text volume :halign "start" :class "text-box")
   )
@@ -58,8 +58,8 @@
        :hexpand false
        :class "wifi-box"
     (image :path wifi-img
-           :image-width 25
-           :image-height 25
+           :image-width 30
+           :image-height 30
            :preserve-aspect-ratio true)
     (label :text wifi-name :halign "start" :class "text-box")
   )
@@ -104,9 +104,9 @@
 
 
 (defwidget music-bar []
-  (box :class "box"
+  (box :class "box" :space-evenly false
     (box :orientation "h" :spacing 0 :valign "center" :halign "start" :space-evenly false :vexpand false :hexpand false
-     (box :class "album" :valign "center" :halign "center" :vexpand false :hexpand false :style "background-image: url('${poster}');")
+     (box :class "album" :valign "center" :halign "center" :vexpand false :hexpand false :style "background-image: url('${poster}');" :space-evenly: false)
      (box :class "musicbox" :orientation "v" :spacing 0 :valign "center" :halign "start" :space-evenly "false" :vexpand "false" :hexpand "false"
 					(label :class "song" :halign "start" :wrap "false" :limit-width 20 :text song)
 					(label :class "artist" :halign "start" :wrap "false" :limit-width 20 :text artist))
@@ -123,6 +123,48 @@
     )
   )
 )
+
+;; ** Weather & datetime **
+
+(defpoll time :interval "5s" "bash ~/.config/eww/scripts/time.sh | head -n1")
+(defpoll date :interval "10s" "bash ~/.config/eww/scripts/time.sh | tail -n1")
+(defpoll celsius :interval "15s" "bash ~/.config/eww/scripts/weather.sh | cut -d'|' -f2")
+(defpoll weather-img :interval "15s" "bash ~/.config/eww/scripts/weather.sh | cut -d'|' -f1")
+(defpoll weather-title :interval "15s" "bash ~/.config/eww/scripts/weather.sh |cut -d'|' -f3")
+
+(defwidget wd-bar []
+ (box :class "box" :space-evenly false :spacing 30
+  (box :orientation "v" :spacing 0 :valign "center" :halign "start" :vexpand false :hexpand false  
+   (box :orientation "h" :space-evenly false :valign "center" :halign "start"
+    (image :path "/home/ru4f/.config/eww/icons/date/clock.png"
+           :image-width 20
+           :image-height 20
+           :preserve-aspect-ratio true)
+    (label :text time  :wrap "false" :halign "start" :class "time")
+   )
+   (box :orientation "h" :space-evenly false :class "date-items" :valign "center" :halign "end"
+    (image :path "/home/ru4f/.config/eww/icons/date/calendar.png"
+           :image-width 20
+           :image-height 20
+           :preserve-aspect-ratio true)
+    (label :text date :wrap "false" :halign "start" :class "date")
+   )
+  )
+  (box :orientation "v" :spacing 0 :valign "center" :halign "end" :vexpand false :hexpand false
+   (box :orientation "h" :space-evenly false :valign "center" :halign "start"
+    (image :path weather-img
+           :image-width 20
+           :image-height 20
+           :preserve-aspect-ratio true)
+    (label :text celsius :wrap false :halign "start" :class "time")
+   )
+   (box :space-evenly false :class "date-items" :valign "center" :halign "end"
+    (label :text weather-title :wrap false :halign "start" :class "date") 
+   )
+  ) 
+ )
+)
+
 ;; ** WINDOWS **
 
 (defwindow bar
@@ -136,6 +178,7 @@
   :exclusive true
   :focusable false
   (box :orientation "h" :space-evenly false :halign "end" :valign "center" :spacing 15
+   (wd-bar)
    (music-bar)
    (status-bar)
   )

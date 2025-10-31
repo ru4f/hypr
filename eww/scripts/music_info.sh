@@ -21,11 +21,6 @@ URL=$(playerctl -p "$PLAYER" metadata xesam:url 2>/dev/null || true)
 ART_URL=$(playerctl -p "$PLAYER" metadata mpris:artUrl 2>/dev/null || true)
 STATUS=$(playerctl -p "$PLAYER" status 2>/dev/null || echo "Stopped")
 
-# Normalize ART_URL
-if [[ "$ART_URL" == file://* ]]; then
-  ART_URL="${ART_URL#file://}"
-fi
-
 SOURCE="none"
 SOURCE_ICON="$DEFAULT_IMG"
 IMAGE="$DEFAULT_IMG"
@@ -46,11 +41,17 @@ else
     exit 0
 fi
 
-# Get image: prefer ART_URL; if youtube and no ART_URL -> use yt thumbnail
-if [[ -n "$ART_URL" && "$ART_URL" == http* ]]; then
+# If local file path
+if [[ "$ART_URL" == file://* ]]; then
+    ART_URL="${ART_URL#file://}"
+    if [ -f "$ART_URL" ]; then
+        IMAGE="$ART_URL"
+fi
+
+# If it's an online image (SoundCloud, Spotify, etc.)
+elif [[ -n "$ART_URL" && "$ART_URL" == http* ]]; then
     HASH=$(echo -n "$ART_URL" | sha256sum | awk '{print $1}')
     FILEPATH="$CACHE_DIR/$HASH"
-    # keep original extension if any
     if [[ "$ART_URL" =~ \.jpe?g$|\.png$ ]]; then
         ext="${ART_URL##*.}"
         FILEPATH="$FILEPATH.$ext"
@@ -63,14 +64,8 @@ if [[ -n "$ART_URL" && "$ART_URL" == http* ]]; then
     if [ -f "$FILEPATH" ]; then
         IMAGE="$FILEPATH"
     fi
-
-elif [[ "$SOURCE" == "youtube" ]]; then
-    # Extract YouTube ID (best-effort)
-    ID=$(echo "$URL" | sed -E 's/.*(v=|v\/|embed\/|\.be\/)([A-Za-z0-9_-]+).*/\2/')
-    if [[ -n "$ID" ]]; then
-        IMAGE="https://img.youtube.com/vi/$ID/maxresdefault.jpg"
-    fi
 fi
+
 
 # Defaults
 TITLE=${TITLE:-"Unknown"}
