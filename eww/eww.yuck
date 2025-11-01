@@ -13,6 +13,25 @@
 (defpoll battery :interval "10s" "bash ~/.config/eww/scripts/battery.sh | sed -n '2p'")
 (defpoll battery-status :interval "5s" "bash ~/.config/eww/scripts/battery.sh | sed -n '3p'")
 
+(defpoll brightness :interval "0.5s" "bash ~/.config/eww/scripts/brightness.sh get | head -n1")
+(defpoll brightness-img :interval "0.5s" "bash ~/.config/eww/scripts/brightness.sh get | tail -n1")
+(defwidget brightness-box []
+ (box :orientation "h"
+       :valign "center"
+       :spacing 8
+       :halign "center"
+       :space-evenly false
+       :vexpand false
+       :hexpand false
+       :class "battery-box"
+    (image :path brightness-img
+           :image-width 30
+           :image-height 30
+           :preserve-aspect-ratio true)
+    (label :text brightness :halign "start" :class "text-box")
+  )
+)
+
 (defwidget battery-box []
   (box :orientation "h"
        :valign "center"
@@ -88,6 +107,7 @@
        :spacing 15
        :class "box"
     (battery-box)
+    (brightness-box)
     (volume-box)
     (wifi-box)
     (user-box)
@@ -137,15 +157,15 @@
   (box :orientation "v" :spacing 0 :valign "center" :halign "start" :vexpand false :hexpand false  
    (box :orientation "h" :space-evenly false :valign "center" :halign "start"
     (image :path "/home/ru4f/.config/eww/icons/date/clock.png"
-           :image-width 20
-           :image-height 20
+           :image-width 22
+           :image-height 22
            :preserve-aspect-ratio true)
     (label :text time  :wrap "false" :halign "start" :class "time")
    )
    (box :orientation "h" :space-evenly false :class "date-items" :valign "center" :halign "end"
     (image :path "/home/ru4f/.config/eww/icons/date/calendar.png"
-           :image-width 20
-           :image-height 20
+           :image-width 22
+           :image-height 22
            :preserve-aspect-ratio true)
     (label :text date :wrap "false" :halign "start" :class "date")
    )
@@ -165,6 +185,60 @@
  )
 )
 
+;; ** Hardware **
+
+(defpoll cpu-img :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | head -n 1 | cut -d '|' -f 1")
+(defpoll cpu :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | tail -n1 | cut -d'|' -f1 | tr -d ' '")
+
+(defpoll ram-img :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | head -n 1 | cut -d '|' -f 2")
+(defpoll ram :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | tail -n1 | cut -d'|' -f2 | tr -d ' '")
+
+(defpoll disk-img :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | head -n 1 | cut -d '|' -f 3")
+(defpoll disk :interval "10s" "bash ~/.config/eww/scripts/hardware.sh | tail -n1 | cut -d'|' -f3 | tr -d ' '")
+
+
+(defwidget hardware-bar []
+ (box :class "box" :orientation "h" :space-evenly false :spacing 10
+  (box :orientation "h" :valign "center" :halign "start" :vexpand false :hexpand false :space-evenly false :class "hardware-box"
+   (image :path cpu-img
+           :image-width 35
+           :image-height 35
+           :preserve-aspect-ratio true)
+   (box :orientation "v" :spacing 0 :valign "center" :halign "center" :vexpand false :hexpand false :space-evenly false
+    (label :text "CPU" :wrap "false" :class "time")
+    (label :text cpu :wrap "false" :class "date")
+   )
+  ) 
+  (box :orientation "h" :valign "center" :halign "center" :vexpand false :hexpand false :space-evenly false :class "hardware-box"
+   (image :path ram-img
+           :image-width 35
+           :image-height 35
+           :preserve-aspect-ratio true)
+   (box :orientation "v" :spacing 0 :valign "center" :halign "center" :vexpand false :hexpand false :space-evenly false
+    (label :text "RAM" :wrap "false" :class "time")
+    (label :text ram :wrap "false" :class "date")
+   )
+  )
+  (box :orientation "h" :valign "center" :halign "end" :vexpand false :hexpand false :space-evenly false :class "hardware-box"
+   (image :path disk-img
+           :image-width 35
+           :image-height 35
+           :preserve-aspect-ratio true)
+   (box :orientation "v" :spacing 0 :valign "center" :halign "center" :vexpand false :hexpand false :space-evenly false
+    (label :text "DISK" :wrap "false" :class "time")
+    (label :text disk :wrap "false" :class "date")
+   )
+  )
+ )
+)
+
+;; ** Workspace **
+
+(defwidget workspace-bar []
+ (box :class "box"
+ )
+)
+
 ;; ** WINDOWS **
 
 (defwindow bar
@@ -178,6 +252,8 @@
   :exclusive true
   :focusable false
   (box :orientation "h" :space-evenly false :halign "end" :valign "center" :spacing 15
+   (workspace-bar)
+   (hardware-bar)
    (wd-bar)
    (music-bar)
    (status-bar)

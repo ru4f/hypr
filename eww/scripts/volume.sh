@@ -18,18 +18,6 @@ else
  last_volume=$volume
 fi
 
-# config volume up/down
-
-if ((volume > last_volume)); then
- anim_icon="$ICON_DIR/volume-up.png"
- echo "$anim_icon"
- sleep 0.5
-elif ((volume < last_volume)); then
- anim_icon="$ICON_DIR/volume-down.png"
- echo "$anim_icon"
- sleep 0.5
-fi
-
 # luu trang thai vao tmp
 
 echo "$volume" > "$STATE_FILE"

@@ -20,7 +20,7 @@ RAM_USED=$(free -m | awk '/Mem:/ {print $3}')
 RAM_TOTAL=$(free -m | awk '/Mem:/ {print $2}')
 RAM_PERC=$((100 * RAM_USED / RAM_TOTAL))
 
-RAM_TXT="${RAM_PERC}% (${RAM_USED}MB/${RAM_TOTAL}MB)"
+RAM_TXT="${RAM_PERC}%"
 RAM_ICON="$ICON_DIR/ram.png"
 
 # ================= DISK ===================
@@ -32,7 +32,7 @@ DISK_PERC=$((100 * DISK_USED / DISK_TOTAL))
 DISK_USED_GB=$(echo "scale=1; $DISK_USED/1024/1024" | bc)
 DISK_TOTAL_GB=$(echo "scale=1; $DISK_TOTAL/1024/1024" | bc)
 
-DISK_TXT="${DISK_PERC}% (${DISK_USED_GB}GB/${DISK_TOTAL_GB}GB)"
+DISK_TXT="${DISK_PERC}%"
 DISK_ICON="$ICON_DIR/ssd-disk.png"
 
 # ================= OUTPUT =================

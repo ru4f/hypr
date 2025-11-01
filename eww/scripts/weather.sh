@@ -1,6 +1,7 @@
 #!/bin/bash
 
-API_KEY="f3810c3273b9a32d602646871a659e45"
+source /home/ru4f/.config/.env
+
 CITY="Turan"
 UNITS="metric"  # hoặc "imperial" cho °F
 LANG="vi"
