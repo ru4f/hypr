@@ -1,6 +1,15 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-active=$(hyprctl activeworkspace -j | jq -r '.id')
-workspaces=$(hyprctl workspaces -j | jq -r '.[].id' | sort -n | paste -sd "," -)
+active=$(hyprctl -j monitors | jq '.[] | select(.focused==true).activeWorkspace.id')
+ICON_DIR="/home/ru4f/.config/eww/icons/workspace"
 
-echo "$active|$workspaces"
+workspaces=()
+for i in {1..5}; do
+  if [ "$i" -eq "$active" ]; then
+    workspaces+=("{\"id\": $i, \"active\": true, \"img\": \"$ICON_DIR/workspace-$i.png\"}")
+  else
+    workspaces+=("{\"id\": $i, \"active\": false, \"img\": \"$ICON_DIR/workspace-$i.png\"}")
+  fi
+done
+
+printf "[%s]\n" "$(IFS=,; echo "${workspaces[*]}")"

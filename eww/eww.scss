@@ -101,8 +101,57 @@ window {
  padding: 0 0 0 5px;
 }
 
+.hardware {
+ font-size : 14px;
+ font-weight : bold;
+ padding: 0 0 0 5px;
+ color : #f5eee6;
+}
+
+.percent { 
+ font-size : 12px;
+ font-weight : bold;
+ padding: 0 0 0 5px;
+ color : #f5eee6;
+}
+
 .hardware-box {
  border-radius: 8px;
- background-color: #d3b592;
+ background-color: #303340;
  padding: 4px;
+}
+
+@keyframes ws-activate {
+  0% {
+    box-shadow: 0 0 0px rgba(137, 180, 250, 0.0);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(137, 180, 250, 1);
+  }
+  100% {
+    box-shadow: 0 0 0px rgba(137, 180, 250, 0.0);
+  }
+}
+
+.ws, .ws-active {
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: 0.15s ease-in-out;
+}
+
+.ws {
+  background: #303340;
+  color: #b0b5c0;
+}
+
+.ws:hover {
+  background: #3d4150;
+}
+
+.ws-active {
+  background: #89B4FA;
+  color: #1e1e2e;
+  border: 1px solid #a6c8ff;
+  animation: ws-activate 0.22s ease-out;
 }

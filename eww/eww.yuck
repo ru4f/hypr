@@ -205,8 +205,8 @@
            :image-height 35
            :preserve-aspect-ratio true)
    (box :orientation "v" :spacing 0 :valign "center" :halign "center" :vexpand false :hexpand false :space-evenly false
-    (label :text "CPU" :wrap "false" :class "time")
-    (label :text cpu :wrap "false" :class "date")
+    (label :text "CPU" :wrap "false" :class "hardware")
+    (label :text cpu :wrap "false" :class "percent")
    )
   ) 
   (box :orientation "h" :valign "center" :halign "center" :vexpand false :hexpand false :space-evenly false :class "hardware-box"
@@ -215,8 +215,8 @@
            :image-height 35
            :preserve-aspect-ratio true)
    (box :orientation "v" :spacing 0 :valign "center" :halign "center" :vexpand false :hexpand false :space-evenly false
-    (label :text "RAM" :wrap "false" :class "time")
-    (label :text ram :wrap "false" :class "date")
+    (label :text "RAM" :wrap "false" :class "hardware")
+    (label :text ram :wrap "false" :class "percent")
    )
   )
   (box :orientation "h" :valign "center" :halign "end" :vexpand false :hexpand false :space-evenly false :class "hardware-box"
@@ -225,8 +225,8 @@
            :image-height 35
            :preserve-aspect-ratio true)
    (box :orientation "v" :spacing 0 :valign "center" :halign "center" :vexpand false :hexpand false :space-evenly false
-    (label :text "DISK" :wrap "false" :class "time")
-    (label :text disk :wrap "false" :class "date")
+    (label :text "DISK" :wrap "false" :class "hardware")
+    (label :text disk :wrap "false" :class "percent")
    )
   )
  )
@@ -234,9 +234,21 @@
 
 ;; ** Workspace **
 
+(defpoll workspaces :interval "0.5s" "bash ~/.config/eww/scripts/workspace.sh")
+
 (defwidget workspace-bar []
- (box :class "box"
- )
+ (box :class "box" :orientation "h" :space-evenly false :spacing 10 
+  (for w in workspaces
+   (button
+    :onclick "hyprctl dispatch workspace ${w.id}"
+    :class "${w.active ? "ws-active" : "ws"}"
+   (image :path "${w.img}"
+           :image-width 30
+           :image-height 30
+           :preserve-aspect-ratio true)
+   )
+  )
+ ) 
 )
 
 ;; ** WINDOWS **
