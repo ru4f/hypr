@@ -251,6 +251,13 @@
  ) 
 )
 
+
+;; ** Search & Notify **
+
+(defwidget tool-bar []
+ (box :class "l-box"
+ )
+) 
 ;; ** WINDOWS **
 
 (defwindow bar
@@ -263,7 +270,8 @@
   :stacking "fg"
   :exclusive true
   :focusable false
-  (box :orientation "h" :space-evenly false :halign "end" :valign "center" :spacing 15
+  (box :orientation "h" :space-evenly false :halign "end" :valign "center"
+   (tool-bar)
    (workspace-bar)
    (hardware-bar)
    (wd-bar)

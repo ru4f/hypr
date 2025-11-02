@@ -14,6 +14,9 @@ if [ -n "$data" ]; then
   desc=$(echo "$data" | jq -r ".weather[0].description")
   icon=$(echo "$data" | jq -r ".weather[0].icon")
 
+  if (( ${#desc} > 7 )); then
+    desc="${desc:0:7}..."
+  fi
   # Map icon API → file png
   case $icon in
     01d) emoji="${ICON_DIR}/sun.png" ;;

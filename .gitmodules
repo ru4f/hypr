@@ -1,0 +1,3 @@
+[submodule "hypr/hyprpolkitagent"]
+	path = hypr/hyprpolkitagent
+	url = https://github.com/hyprwm/hyprpolkitagent
