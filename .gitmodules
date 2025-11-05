@@ -1,3 +1,6 @@
 [submodule "hypr/hyprpolkitagent"]
 	path = hypr/hyprpolkitagent
 	url = https://github.com/hyprwm/hyprpolkitagent
+[submodule "hypr/hyprlock"]
+	path = hypr/hyprlock
+	url = https://github.com/hyprwm/hyprlock

@@ -80,7 +80,7 @@
            :image-width 30
            :image-height 30
            :preserve-aspect-ratio true)
-    (label :text wifi-name :halign "start" :class "text-box")
+     (label :text wifi-name :halign "start" :class "text-box" :limit-width 6)
   )
 )
 
@@ -124,14 +124,14 @@
 
 
 (defwidget music-bar []
-  (box :class "box" :space-evenly false
+  (box :class "m-box" :space-evenly false :hexpand false :vexpand false :height 45 :width 200
     (box :orientation "h" :spacing 0 :valign "center" :halign "start" :space-evenly false :vexpand false :hexpand false
-     (box :class "album" :valign "center" :halign "center" :vexpand false :hexpand false :style "background-image: url('${poster}');" :space-evenly: false)
-     (box :class "musicbox" :orientation "v" :spacing 0 :valign "center" :halign "start" :space-evenly "false" :vexpand "false" :hexpand "false"
+     (box :class "album" :valign "center" :halign "center" :vexpand false :hexpand false :style "background-image: url('${poster}');" :space-evenly false)
+     (box :class "musicbox" :orientation "v" :spacing 0 :valign "center" :halign "start" :space-evenly "false" :vexpand "false" :hexpand "false" :width 174
 					(label :class "song" :halign "start" :wrap "false" :limit-width 20 :text song)
 					(label :class "artist" :halign "start" :wrap "false" :limit-width 20 :text artist))
     )
-    (box :class "music-buttons" :orientation "h" :spacing 5 :valign "center" :halign "end" :space-evenly false :vexpand false :hexpand false
+    (box :class "space":orientation "h" :spacing 5 :valign "center" :halign "end" :space-evenly false :vexpand false :hexpand false
       (button :style "background-image: url('/home/ru4f/.config/eww/icons/music/previous.png');" :class "trackbutton" :onclick "bash /home/ru4f/.config/eww/scripts/music_control.sh prev")
       (button :class "playbutton" 
               :onclick "bash /home/ru4f/.config/eww/scripts/music_control.sh play-pause" 
@@ -178,8 +178,8 @@
            :preserve-aspect-ratio true)
     (label :text celsius :wrap false :halign "start" :class "time")
    )
-   (box :space-evenly false :class "date-items" :valign "center" :halign "end"
-    (label :text weather-title :wrap false :halign "start" :class "date") 
+   (box :space-evenly false :class "date-items" :valign "center" :halign "start"
+    (label :text weather-title :wrap false :halign "start" :class "descrp") 
    )
   ) 
  )
@@ -252,12 +252,74 @@
 )
 
 
-;; ** Search & Notify **
+;; ** Search & Notify & Power **
+
+(defvar show_menu false)
 
 (defwidget tool-bar []
- (box :class "l-box"
+ (centerbox :class "l-box" :orientation "h"
+ (eventbox
+   :cursor "pointer"
+  )
+ (eventbox
+   :cursor "pointer"
  )
-) 
+ (eventbox
+   :cursor "pointer"
+   :onclick "if [ $(eww get show_menu) = true ]; then eww update show_menu=false; eww close power_popup; else eww update show_menu=true; eww open power_popup; fi"
+   (image :path "/home/ru4f/.config/eww/icons/power/menu.png"
+           :image-width 35
+           :image-height 35
+           :preserve-aspect-ratio true)
+  )
+)
+)
+
+(defwindow power_popup
+  :monitor 0
+  :geometry (geometry
+              :x "50%"
+              :y "50%"
+              :width "320px"
+              :anchor "center center")
+  :stacking "overlay"
+  :focusable false
+  :exclusive false
+  (box :class "power-menu"
+       :orientation "v"
+       :spacing 15
+       :halign "center"
+       :valign "center"
+       :hexpand false
+       :vexpand false
+    (box :orientation "h" :spacing 15 :halign "center"
+      (button :class "power-item"
+              :onclick "bash /home/ru4f/.config/eww/scripts/power.sh logout; eww update show_menu=false; eww close power_popup"
+        (image :path "/home/ru4f/.config/eww/icons/power/exit.png"
+               :image-width 50 :image-height 50 :preserve-aspect-ratio true))
+      (button :class "power-item"
+              :onclick "bash /home/ru4f/.config/eww/scripts/power.sh sleep; eww update show_menu=false; eww close power_popup"
+        (image :path "/home/ru4f/.config/eww/icons/power/sleep.png"
+               :image-width 50 :image-height 50 :preserve-aspect-ratio true))
+    )
+    (box :orientation "h" :spacing 15 :halign "center"
+      (button :class "power-item"
+              :onclick "bash /home/ru4f/.config/eww/scripts/power.sh lock; eww update show_menu=false; eww close power_popup"
+        (image :path "/home/ru4f/.config/eww/icons/power/shield.png"
+               :image-width 50 :image-height 50 :preserve-aspect-ratio true))
+      (button :class "power-item"
+              :onclick "bash /home/ru4f/.config/eww/scripts/power.sh restart; eww update show_menu=false; eww close power_popup"
+        (image :path "/home/ru4f/.config/eww/icons/power/nonstop.png"
+               :image-width 50 :image-height 50 :preserve-aspect-ratio true))
+      (button :class "power-item"
+              :onclick "bash /home/ru4f/.config/eww/scripts/power.sh shutdown; eww update show_menu=false; eww close power_popup"
+        (image :path "/home/ru4f/.config/eww/icons/power/power-button.png"
+               :image-width 50 :image-height 50 :preserve-aspect-ratio true))
+    )
+  )
+)
+
+
 ;; ** WINDOWS **
 
 (defwindow bar
@@ -265,12 +327,12 @@
   :geometry (geometry :x "0px"
                       :y "0px"
                       :width "100%"
-                      :height "50px"
+                      :height "45px"
                       :anchor "top center")
   :stacking "fg"
   :exclusive true
   :focusable false
-  (box :orientation "h" :space-evenly false :halign "end" :valign "center"
+  (box :orientation "h" :space-evenly false :halign "end" :valign "center" 
    (tool-bar)
    (workspace-bar)
    (hardware-bar)

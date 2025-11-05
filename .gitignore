@@ -6,7 +6,9 @@ dconf/
 gtk-3.0/
 pulse/
 systemd/
+google-chrome/
 
 # File
 *.ini
 .env
+.list

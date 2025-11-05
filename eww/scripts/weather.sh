@@ -15,7 +15,7 @@ if [ -n "$data" ]; then
   icon=$(echo "$data" | jq -r ".weather[0].icon")
 
   if (( ${#desc} > 7 )); then
-    desc="${desc:0:7}..."
+    desc="${desc:0:7}.."
   fi
   # Map icon API → file png
   case $icon in

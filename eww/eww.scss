@@ -47,10 +47,29 @@ window {
   min-height: 45px;
 }
 
+.m-box {
+  padding: 8px 10px;
+  margin: 10px 10px 0 0;
+  background: #f5eee6;
+  border: 2px solid #1e1e2e;
+  border-radius: 10px;
+}
+
+.t-box {
+ padding: 10px 10px;
+ background: #f5eee6;
+ border: 2px solid #1e1e2e;
+ border-radius: 10px;
+}
+
+.space {
+ margin : 0 0 0 10px;
+}
+
 .l-box {
   padding: 8px 10px;
   margin: 10px 10px 0 10px;
-  min-width: 100px;
+  min-width: 150px;
   min-height: 45px;
   background: #f5eee6; 
   border: 2px solid #1e1e2e;
@@ -96,10 +115,6 @@ window {
 	border-radius: 8px;
 }
 
-.music-buttons {
-	margin : 0px 0px 0px 50px;
-}
-
 .date {
  font-size : 12px;
  font-weight: bold;
@@ -110,6 +125,12 @@ window {
  font-size : 14px;
  font-weight : bold;
  padding: 0 0 0 5px;
+}
+
+.descrp{
+ font-size : 12px;
+ font-weight: bold;
+ padding: 0;
 }
 
 .hardware {
@@ -165,4 +186,32 @@ window {
   color: #1e1e2e;
   border: 1px solid #a6c8ff;
   animation: ws-activate 0.22s ease-out;
+}
+
+.cpu-ring {
+  color: #88c0d0;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+
+window#power_popup {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.power-menu {
+  background: #f5eee6;
+  border-radius: 16px;
+  padding: 20px;
+  border: 2px solid #1e1e2e;
+}
+
+.power-item {
+  background: #303340;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.power-item:hover {
+  background: rgba(255,255,255,0.18);
 }
