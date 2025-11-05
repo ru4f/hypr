@@ -10,5 +10,5 @@ google-chrome/
 
 # File
 *.ini
-.env
-.list
+*.env
+*.list
