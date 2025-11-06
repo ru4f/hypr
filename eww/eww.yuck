@@ -104,7 +104,7 @@
        :space-evenly false
        :halign "end"
        :valign "center"
-       :spacing 15
+       :spacing 10
        :class "box"
     (battery-box)
     (brightness-box)
@@ -255,25 +255,71 @@
 ;; ** Search & Notify & Power **
 
 (defvar show_menu false)
+(defvar show_search false)
+(defvar show_apps false)
 
 (defwidget tool-bar []
- (centerbox :class "l-box" :orientation "h"
- (eventbox
-   :cursor "pointer"
-  )
- (eventbox
-   :cursor "pointer"
- )
- (eventbox
-   :cursor "pointer"
-   :onclick "if [ $(eww get show_menu) = true ]; then eww update show_menu=false; eww close power_popup; else eww update show_menu=true; eww open power_popup; fi"
-   (image :path "/home/ru4f/.config/eww/icons/power/menu.png"
-           :image-width 35
-           :image-height 35
-           :preserve-aspect-ratio true)
+  (centerbox :class "l-box" :orientation "h" :hexpand true
+    (eventbox
+      :halign "start"
+      :cursor "pointer"
+      :onclick "
+        eww update show_menu=false; eww close power_popup;
+        eww update show_seach=false; eww close apps_popup;
+
+        if [ $(eww get show_apps) = true ]; then
+          eww update show_apps=false; eww close search_popup; eww close backdrop;
+        else
+          eww update show_apps=true; eww open backdrop; eww open apps_popup;
+        fi
+      "
+      (box :class "${show_apps ? "ws-active" : "ws"}" :orientation "h" :halign "center" :valign "center"
+        (image :path "/home/ru4f/.config/eww/icons/tool/app.png"
+               :image-width 30 :image-height 30
+               :preserve-aspect-ratio true)
+      )
+    )
+    (eventbox
+      :halign "center"
+      :cursor "pointer"
+      :onclick "
+        eww update show_menu=false; eww close power_popup;
+        eww update show_apps=false; eww close search_popup;
+
+        if [ $(eww get show_search) = true ]; then
+          eww update show_search=false; eww close search_popup; eww close backdrop;
+        else
+          eww update show_search=true; eww open backdrop; eww open search_popup;
+        fi
+      "
+      (box :class "${show_search ? "ws-active" : "ws"}" :orientation "h" :halign "center" :valign "center"
+        (image :path "/home/ru4f/.config/eww/icons/tool/search.png"
+               :image-width 30 :image-height 30
+               :preserve-aspect-ratio true)
+      )
+    )
+    (eventbox
+      :halign "end"
+      :cursor "pointer"
+      :onclick "
+        eww update show_search=false; eww close search_popup;
+        eww update show_apps=false; eww close apps_popup;
+
+        if [ $(eww get show_menu) = true ]; then
+          eww update show_menu=false; eww close power_popup; eww close backdrop;
+        else
+          eww update show_menu=true; eww open backdrop; eww open power_popup;
+        fi
+      "
+      (box :class "${show_menu ? "ws-active" : "ws"}" :orientation "h" :halign "center" :valign "center"
+        (image :path "/home/ru4f/.config/eww/icons/tool/power.png"
+               :image-width 30 :image-height 30
+               :preserve-aspect-ratio true)
+      )
+    )
   )
 )
-)
+
 
 (defwindow power_popup
   :monitor 0
